@@ -954,11 +954,11 @@ where
                             "Encounted fragmented control frame.",
                         ));
                     } else {
-                        trace!("Received non-final fragment frame {:?}", frame);
+                        trace!("Received non-final fragment frame payload len {}, capacity {}, len {}, frame {:?}", frame.len(), self.settings.fragments_capacity, self.fragments.len(), frame);
                         if !self.settings.fragments_grow
                             && self.settings.fragments_capacity == self.fragments.len()
                         {
-                            return Err(Error::new(Kind::Capacity, "Exceeded max fragments."));
+                            return Err(Error::new(Kind::Capacity, format!("Exceeded max fragments. {} {}", self.settings.fragments_capacity, self.fragments.len())));
                         } else {
                             self.fragments.push_back(frame)
                         }
